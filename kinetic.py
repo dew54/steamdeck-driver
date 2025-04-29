@@ -1,27 +1,27 @@
 class Kinetic:
-    def __init__(self, index=0):
+    def __init__(self, index=None):
         self.index = index
 
-        self.roll = 0
-        self.pitch = 0
-        self.yaw = 0
-        self.x = 0
-        self.y = 0
-        self.z = 0
+        self.roll = None
+        self.pitch = None
+        self.yaw = None
+        self.x = None
+        self.y = None
+        self.z = None
 
-        self.VRoll = 0
-        self.VPitch = 0
-        self.VYaw = 0
-        self.VX = 0
-        self.VY = 0
-        self.VZ = 0
+        self.VRoll = None
+        self.VPitch = None
+        self.VYaw = None
+        self.VX = None
+        self.VY = None
+        self.VZ = None
 
-        self.ARoll = 0
-        self.APitch = 0
-        self.AYaw = 0
-        self.AX = 0
-        self.AY = 0
-        self.AZ = 0
+        self.ARoll = None
+        self.APitch = None
+        self.AYaw = None
+        self.AX = None
+        self.AY = None
+        self.AZ = None
 
     def updateAngle(self, roll, pitch, yaw):
         self.roll = roll
