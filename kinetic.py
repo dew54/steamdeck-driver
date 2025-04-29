@@ -1,7 +1,7 @@
 class Kinetic:
     def __init__(self, index=0):
         self.index = index
-        
+
         self.roll = 0
         self.pitch = 0
         self.yaw = 0
@@ -52,7 +52,19 @@ class Kinetic:
         self.AX = AX
         self.AY = AY
         self.AZ = AZ
+
+    def updateConfiguration(self, angles, positions):
+        self.updateAngle(*angles)
+        self.updatePosition(*positions)
+
+    def updateVelocity(self, anglesV, positionsV):
+        self.updateAngleV(*anglesV)
+        self.updatePositionV(*positionsV)
     
+    def updateAcceleration(self, anglesA, positionsA):
+        self.updateAngleA(*anglesA)
+        self.updatePositionA(*positionsA)
+        
     def getAngle(self):
         return self.roll, self.pitch, self.yaw      
     
