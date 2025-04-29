@@ -5,25 +5,25 @@ class Message:
 
     def __init__(self):
         self.state = {
-            "index": 0,
-            "roll": 0,
-            "pitch": 0,
-            "yaw": 0,
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "VRoll": 0,
-            "VPitch": 0,
-            "VYaw": 0,
-            "VX": 0,
-            "VY": 0,
-            "VZ": 0,
-            "ARoll": 0,
-            "APitch": 0,
-            "AYaw": 0,
-            "AX": 0,
-            "AY": 0,
-            "AZ": 0
+            "index": None,
+            "roll": None,
+            "pitch": None,
+            "yaw": None,
+            "x": None,
+            "y": None,
+            "z": None,
+            "VRoll": None,
+            "VPitch": None,
+            "VYaw": None,
+            "VX": None,
+            "VY": None,
+            "VZ": None,
+            "ARoll": None,
+            "APitch": None,
+            "AYaw": None,
+            "AX": None,
+            "AY": None,
+            "AZ": None
         }
     
     def packKinetic(self, kinetic):
