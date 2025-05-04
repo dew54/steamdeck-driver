@@ -1,4 +1,5 @@
-import msgpack
+# import msgpack
+import json
 import base64
 
 class Message:
@@ -47,9 +48,12 @@ class Message:
         self.state["AY"] = kinetic.AY
         self.state["AZ"] = kinetic.AZ
 
-        packed = msgpack.packb(self.state)
+        packed = json.dumps(self.state)  # Convert dictionary to JSON string
+        return packed
+    # return packed
+    #     packed = msgpack.packb(self.state)
 
-        base64_str = base64.b64encode(packed).decode('utf-8')
-        return base64_str
+    #     base64_str = base64.b64encode(packed).decode('utf-8')
+    #     return base64_str
 
         

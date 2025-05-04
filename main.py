@@ -1,11 +1,13 @@
 from steamdeck import SteamDeck
 from mechanumPlatform import MechanumPlatform
 from message import Message
+from udp_handler import PicoW_UDP_Client
 
 
 deck = SteamDeck()
 platform = MechanumPlatform(deck)
 msg = Message()
+client = PicoW_UDP_Client()
 
 try:
     while True:
