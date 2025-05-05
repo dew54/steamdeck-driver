@@ -29,8 +29,14 @@ void setup() {
 void loop() {
   int len = Udp.parsePacket();
   if (len > 0) {
-    int bytesRead = Udp.read(packetBuffer, packetSize - 1); // leave space for null terminator
-    packetBuffer[bytesRead] = '\0'; // Null-terminate the JSON string
+    Serial.printf("[UDP] Packet received: %d bytes\n", len);
+    Serial.printf("[UDP] From IP: %s, Port: %d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
+
+    int bytesRead = Udp.read(packetBuffer, packetSize - 1);
+    packetBuffer[bytesRead] = '\0'; // Null-terminate
+
+    Serial.printf("[UDP] Data: %s\n", packetBuffer);  // See raw content
+
     processKineticMsg(packetBuffer);
   }
 }
