@@ -16,6 +16,8 @@ try:
 
         print(cmd)
 
+        PicoW_UDP_Client.send_message(cmd)
+
 
 
 
