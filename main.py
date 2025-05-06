@@ -16,7 +16,9 @@ try:
 
         print(cmd)
 
-        PicoW_UDP_Client.send_message(cmd)
+        udp = PicoW_UDP_Client()
+
+        udp.send_message(cmd)
 
 
 
