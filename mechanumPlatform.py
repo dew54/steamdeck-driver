@@ -12,7 +12,7 @@ class MechanumPlatform(Platform):
 
         positionV = (vx, vy, 0)
         angleV = (0, 0, vw)
-        self.kinetic_0.updateVelocity(positionV, angleV)
+        self.kinetic_0.updateVelocity(angleV, positionV)
 
     def getKinetic(self):
         return self.kinetic_0
