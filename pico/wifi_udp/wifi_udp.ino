@@ -14,12 +14,24 @@ char packetBuffer[packetSize]; // Now a char array for JSON strings
 // Declare the JsonDocument globally with a specific capacity
 StaticJsonDocument<256> doc;
 
+const int ledPin = LED_BUILTIN;  // For Pico W, use 25 if LED_BUILTIN is undefined
+
+
 void setup() {
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+
   Serial.begin(115200);
   Motor_Setup();
 
+
   WiFi.softAP(ssid, password);
-  delay(1000);
+
+  
+  while (!Serial) {
+    delay(10);  // Wait for serial port to connect
+  }
+  
   Serial.println(WiFi.softAPIP());
 
   Udp.begin(udpPort);
@@ -28,16 +40,21 @@ void setup() {
 
 void loop() {
   int len = Udp.parsePacket();
+  // Serial.printf("PING");
+  // digitalWrite(ledPin, HIGH);
+  // delay(1000);
+  // digitalWrite(ledPin, LOW);
   if (len > 0) {
     Serial.printf("[UDP] Packet received: %d bytes\n", len);
     Serial.printf("[UDP] From IP: %s, Port: %d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
 
     int bytesRead = Udp.read(packetBuffer, packetSize - 1);
-    packetBuffer[bytesRead] = '\0'; // Null-terminate
+    packetBuffer[bytesRead] = '\0';
 
-    Serial.printf("[UDP] Data: %s\n", packetBuffer);  // See raw content
+    Serial.printf("[UDP] Data: %s\n", packetBuffer);
 
     processKineticMsg(packetBuffer);
+
   }
 }
 

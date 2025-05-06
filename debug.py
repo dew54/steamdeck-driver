@@ -11,7 +11,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Example JSON message
 data = {
-    "VX": 1.0,
+    "VX": 100.0,
     "VY": 0.5,
     "VYaw": -0.2
 }
