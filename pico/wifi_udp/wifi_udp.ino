@@ -54,7 +54,11 @@ void loop() {
     Serial.printf("[UDP] Data: %s\n", packetBuffer);
 
     processKineticMsg(packetBuffer);
+    delay(100);
 
+  }
+  else{
+    Motor_M_Move(0, 0, 0, 0);
   }
 }
 
