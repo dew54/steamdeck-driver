@@ -1,7 +1,7 @@
 import socket
 
 class PicoW_UDP_Client:
-    def __init__(self, ip='192.168.4.1', port=4210):
+    def __init__(self, ip='192.168.42.1', port=4210):
         self.server_ip = ip
         self.server_port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
