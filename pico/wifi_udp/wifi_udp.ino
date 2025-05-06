@@ -54,7 +54,7 @@ void loop() {
     Serial.printf("[UDP] Data: %s\n", packetBuffer);
 
     processKineticMsg(packetBuffer);
-    delay(100);
+    // delay(100);
 
   }
   else{

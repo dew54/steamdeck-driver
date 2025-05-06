@@ -2,6 +2,7 @@ from steamdeck import SteamDeck
 from mechanumPlatform import MechanumPlatform
 from message import Message
 from udp_handler import PicoW_UDP_Client
+import time
 
 
 deck = SteamDeck()
@@ -19,6 +20,8 @@ try:
         udp = PicoW_UDP_Client()
 
         udp.send_message(cmd)
+
+        time.sleep(0.05)
 
 
 
