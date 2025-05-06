@@ -8,7 +8,7 @@ class MechanumPlatform(Platform):
 
         vx = (self.deck.get_axis(0)/32000)*50
         vy = (self.deck.get_axis(1)/32000)*50
-        vw = (self.deck.get_axis(3)/32000)*50
+        vw = (self.deck.get_axis(2)/32000)*50
 
         positionV = (vx, vy, 0)
         angleV = (0, 0, vw)
