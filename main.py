@@ -8,8 +8,8 @@ from udp_handler import PicoW_UDP_Client
 
 
 # ===== CONFIGURE YOUR SSID & PASSWORD =====
-WIFI_SSID = "YourNetworkSSID"
-WIFI_PASSWORD = "YourPassword123"
+WIFI_SSID = "steamDriver"
+WIFI_PASSWORD = "12345678"
 
 
 def connect_to_wifi(ssid, password):
