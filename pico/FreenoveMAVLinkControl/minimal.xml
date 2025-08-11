@@ -1,0 +1,14 @@
+<mavlink>
+    <version>3</version>
+    <dialect>1</dialect>
+    <enums>
+    </enums>
+    <messages>
+        <message id="20000" name="SET_VELOCITY_COMMAND">
+            <description>Command to set desired velocity in X and Y directions, and yaw rate.</description>
+            <field name="vx" type="float">Velocity in X-axis (forward/backward) in m/s.</field>
+            <field name="vy" type="float">Velocity in Y-axis (left/right) in m/s.</field>
+            <field name="yaw_rate" type="float">Yaw rate in degrees per second (positive for clockwise, negative for counter-clockwise).</field>
+        </message>
+    </messages>
+</mavlink>

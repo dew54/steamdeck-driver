@@ -9,13 +9,16 @@ WiFiUDP Udp;
 const int udpPort = 4210;
 
 const int packetSize = 256;
-char packetBuffer[packetSize]; // Now a char array for JSON strings
+char packetBuffer[packetSize];
 
-// Declare the JsonDocument globally with a specific capacity
-StaticJsonDocument<256> doc;
+// Documento JSON con capacità maggiore
+StaticJsonDocument<512> doc;
 
-const int ledPin = LED_BUILTIN;  // For Pico W, use 25 if LED_BUILTIN is undefined
+const int ledPin = LED_BUILTIN;  // Su Pico W dovrebbe essere 25
+const unsigned long PACKET_TIMEOUT_MS = 500; // Timeout fermata motori (ms)
+const int MOTOR_MAX = 255;  // Velocità massima motore
 
+unsigned long lastPacketTime = 0;
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -24,14 +27,10 @@ void setup() {
   Serial.begin(115200);
   Motor_Setup();
 
-
   WiFi.softAP(ssid, password);
+  while (!Serial) { delay(10); }
 
-  
-  while (!Serial) {
-    delay(10);  // Wait for serial port to connect
-  }
-  
+  Serial.print("AP IP Address: ");
   Serial.println(WiFi.softAPIP());
 
   Udp.begin(udpPort);
@@ -40,49 +39,60 @@ void setup() {
 
 void loop() {
   int len = Udp.parsePacket();
-  // Serial.printf("PING");
-  // digitalWrite(ledPin, HIGH);
-  // delay(1000);
-  // digitalWrite(ledPin, LOW);
+
   if (len > 0) {
-    Serial.printf("[UDP] Packet received: %d bytes\n", len);
-    Serial.printf("[UDP] From IP: %s, Port: %d\n", Udp.remoteIP().toString().c_str(), Udp.remotePort());
+    // Se pacchetto più grande del buffer, segnaliamo truncamento
+    if (len >= packetSize) {
+      Serial.println("[UDP] Warning: packet truncated");
+    }
 
     int bytesRead = Udp.read(packetBuffer, packetSize - 1);
     packetBuffer[bytesRead] = '\0';
 
-    Serial.printf("[UDP] Data: %s\n", packetBuffer);
+    Serial.printf("[UDP] %d bytes from %s:%d\n",
+                  bytesRead,
+                  Udp.remoteIP().toString().c_str(),
+                  Udp.remotePort());
 
     processKineticMsg(packetBuffer);
-    // delay(100);
+    lastPacketTime = millis();
 
+    // LED feedback
+    digitalWrite(ledPin, HIGH);
   }
-  else{
+
+  // Se non arrivano pacchetti entro il timeout, fermiamo i motori
+  if (millis() - lastPacketTime > PACKET_TIMEOUT_MS) {
     Motor_M_Move(0, 0, 0, 0);
+    digitalWrite(ledPin, LOW);
   }
 }
 
 void processKineticMsg(const char* json) {
   DeserializationError error = deserializeJson(doc, json);
 
-  if (!error) {
-    float vx = doc["VX"] | 0.0;
-    float vy = doc["VY"] | 0.0;
-    float vyaw = doc["VYaw"] | 0.0;
-
-    int LY = static_cast<int>(vy);
-    int LX = static_cast<int>(vx);
-    int RX = static_cast<int>(vyaw);
-
-    int FR = LY - LX + RX;
-    int FL = LY + LX - RX;
-    int BL = LY - LX - RX;
-    int BR = LY + LX + RX;
-
-    Motor_M_Move(FL, BL, BR, FR); // Move motors
-
-    Serial.printf("VX: %.2f, VY: %.2f, VYaw: %.2f\n", vx, vy, vyaw);
-  } else {
-    Serial.println("Error parsing JSON data.");
+  if (error) {
+    Serial.printf("[JSON] Parse error: %s\n", error.c_str());
+    return;
   }
+
+  // Lettura valori con default
+  float vx   = doc["VX"]   | 0.0;
+  float vy   = doc["VY"]   | 0.0;
+  float vyaw = doc["VYaw"] | 0.0;
+
+  // Scala da [-1.0, 1.0] → [-255, 255]
+  int LX = constrain((int)(vx   * MOTOR_MAX), -MOTOR_MAX, MOTOR_MAX);
+  int LY = constrain((int)(vy   * MOTOR_MAX), -MOTOR_MAX, MOTOR_MAX);
+  int RX = constrain((int)(vyaw * MOTOR_MAX), -MOTOR_MAX, MOTOR_MAX);
+
+  int FR = constrain(LY - LX + RX, -MOTOR_MAX, MOTOR_MAX);
+  int FL = constrain(LY + LX - RX, -MOTOR_MAX, MOTOR_MAX);
+  int BL = constrain(LY - LX - RX, -MOTOR_MAX, MOTOR_MAX);
+  int BR = constrain(LY + LX + RX, -MOTOR_MAX, MOTOR_MAX);
+
+  Motor_M_Move(FL, BL, BR, FR);
+
+  Serial.printf("VX: %.2f, VY: %.2f, VYaw: %.2f | FL:%d BL:%d BR:%d FR:%d\n",
+                vx, vy, vyaw, FL, BL, BR, FR);
 }

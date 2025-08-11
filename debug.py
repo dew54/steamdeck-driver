@@ -1,28 +1,41 @@
 import socket
 import json
 import time
+import math
 
 # IP and port of the Pico W's access point
-PICO_IP = "192.168.42.1"  # Default IP for ESP32/ESP8266 SoftAP mode
+PICO_IP = "192.168.42.1"
 UDP_PORT = 4210
 
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Example JSON message
-data = {
-    "VX": 100.0,
-    "VY": 0.5,
-    "VYaw": -0.2
-}
+print("Starting mock input loop. Press Ctrl+C to stop.")
 
-# Serialize JSON to string
-message = json.dumps(data)
+try:
+    t = 0.0
+    while True:
+        # Create mock values (oscillating between -1 and 1)
+        vx = math.sin(t)           # forward/backward
+        vy = math.cos(t / 2)       # strafe
+        vyaw = math.sin(t / 3)     # rotation
 
-# Send the message
-sock.sendto(message.encode(), (PICO_IP, UDP_PORT))
-print(f"Sent to {PICO_IP}:{UDP_PORT} -> {message}")
+        # Scale to match expected range (-1.0..1.0 in Arduino code)
+        data = {
+            "VX": vx,
+            "VY": vy,
+            "VYaw": vyaw
+        }
 
-# Optionally keep sending for testing
-# time.sleep(1)
-# sock.close()
+        message = json.dumps(data)
+        sock.sendto(message.encode(), (PICO_IP, UDP_PORT))
+
+        print(f"Sent: {message}")
+
+        t += 0.1
+        time.sleep(0.1)  # send at ~10 Hz
+
+except KeyboardInterrupt:
+    print("\nStopped.")
+finally:
+    sock.close()
