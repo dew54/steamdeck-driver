@@ -7,7 +7,7 @@ class MechanumPlatform(Platform):
         self.deck.poll()
 
         vx = -(self.deck.get_axis(0)/32000)
-        vy = (self.deck.get_axis(1)/32000)
+        vy = -(self.deck.get_axis(1)/32000)
         vw = (self.deck.get_axis(2)/32000)
 
         positionV = (vx, vy, 0)
