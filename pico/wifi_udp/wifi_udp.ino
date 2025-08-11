@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 #include "Freenove_4WD_Car_For_Pico_W.h"
 
-const char* ssid = "PicoCar_UDP";
+const char* ssid = "steamDriver";
 const char* password = "12345678";
 WiFiUDP Udp;
 const int udpPort = 4210;
