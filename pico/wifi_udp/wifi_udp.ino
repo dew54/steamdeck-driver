@@ -25,10 +25,17 @@ void setup() {
   digitalWrite(ledPin, LOW);
 
   Serial.begin(115200);
+
+  // Wait up to 3 seconds for Serial connection (for debugging),
+  // then continue even if no serial connected
+  unsigned long start = millis();
+  while (!Serial && millis() - start < 3000) {
+    delay(10);
+  }
+
   Motor_Setup();
 
   WiFi.softAP(ssid, password);
-  while (!Serial) { delay(10); }
 
   Serial.print("AP IP Address: ");
   Serial.println(WiFi.softAPIP());
