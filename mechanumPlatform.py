@@ -6,9 +6,9 @@ class MechanumPlatform(Platform):
     def updateKinetic(self, k_index=0):
         self.deck.poll()
 
-        vx = (self.deck.get_axis(0)/32000)*50
-        vy = (self.deck.get_axis(1)/32000)*50
-        vw = (self.deck.get_axis(2)/32000)*50
+        vx = (self.deck.get_axis(0)/32000)/2
+        vy = (self.deck.get_axis(1)/32000)/2
+        vw = (self.deck.get_axis(2)/32000)/2
 
         positionV = (vx, vy, 0)
         angleV = (0, 0, vw)
